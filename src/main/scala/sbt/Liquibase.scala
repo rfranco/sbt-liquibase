@@ -2,6 +2,7 @@ package sbt
 
 import sbt.Def._
 import sbt.Keys._
+import sbt.liquibase.command._
 
 object Liquibase extends Plugin {
 
@@ -21,6 +22,7 @@ object Liquibase extends Plugin {
     liquibaseContexts := Nil,
     liquibaseDefaultSchemaName := None,
     liquibaseLogLevel := "warning"
-  )
+  ) ++
+    MaintenanceCommand.settings
 
 }
