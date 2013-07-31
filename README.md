@@ -1,5 +1,7 @@
 Liquibase plugin for sbt 0.13+
 ====================================
+[![Build Status](https://travis-ci.org/rfranco/sbt-liquibase.png)](https://travis-ci.org/[YOUR_GITHUB_USERNAME]/[YOUR_PROJECT_NAME])
+====================================
 
 # Instructions for use:
 ### Step 1: Include the plugin in your build
