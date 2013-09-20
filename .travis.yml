@@ -1,5 +1,5 @@
 language: scala
-script: wget https://raw.github.com/paulp/sbt-extras/master/sbt && chmod u+x ./sbt && ./sbt scripted
+script: wget https://raw.github.com/paulp/sbt-extras/master/sbt && chmod u+x ./sbt && ./sbt -sbt-version 0.13.0 test scripted
 scala:
   - "2.10.2"
 jdk:
