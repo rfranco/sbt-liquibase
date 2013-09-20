@@ -23,6 +23,10 @@ object Liquibase extends Plugin {
     liquibaseDefaultSchemaName := None,
     liquibaseLogLevel := "warning"
   ) ++
-    MaintenanceCommand.settings
+    DiffCommand.settings ++
+    DocumentationCommand.settings ++
+    MaintenanceCommand.settings ++
+    RollbackCommand.settings ++
+    UpdateCommand.settings
 
 }
