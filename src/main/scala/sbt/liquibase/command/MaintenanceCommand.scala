@@ -5,13 +5,11 @@ import java.io.PrintStream
 import sbt.Def.{macroValueI, macroValueIT}
 import sbt._
 import sbt.Keys._
-import sbt.Process._
-import sbt.liquibase.LiquibaseHelper
 
 object MaintenanceCommand {
 
-  import Liquibase._
-  import LiquibaseHelper._
+  import SbtLiquibase._
+  import liquibase.LiquibaseHelper._
 
   private val liquibaseStatus = taskKey[Unit]("Outputs count (list if --verbose) of unrun change sets")
   private val liquibaseTag = inputKey[Unit]("<tag>	'Tags' the current database state for future rollback")
@@ -78,7 +76,7 @@ object MaintenanceCommand {
   }
 
   private lazy val dropAll = Def.inputTask {
-    val args = StringArgs("<schemas> ...").parsed
+    val args = StringArgs("<schemas>").parsed
     val schemas = args.map(s => new CatalogAndSchema(null, s))
     liquibase.value.dropAll(schemas: _*)
   }

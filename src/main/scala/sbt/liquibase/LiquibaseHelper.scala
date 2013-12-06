@@ -1,38 +1,45 @@
 package sbt.liquibase
 
-import liquibase.database.Database
 import liquibase.integration.commandline.CommandLineUtils
 import liquibase.resource.FileSystemResourceAccessor
-import liquibase.{Liquibase => JLiquibase}
+import liquibase.Liquibase
 import sbt.Def.{macroValueI, macroValueIT}
 import sbt.Keys._
 import sbt._
 import sbt.classpath.ClasspathUtilities
 import sbt.complete.DefaultParsers._
+import sbt.complete.Parser
 import sbt.complete.Parser.token
 
 object LiquibaseHelper {
 
-  import Liquibase._
+  import SbtLiquibase._
 
-  private lazy val database = Def.task[Database] {
-    val fc = (fullClasspath in(ThisProject, Runtime)).value
-    CommandLineUtils.createDatabaseObject(
-      ClasspathUtilities.toLoader(fc.map(_.data)),
-      liquibaseUrl.value, liquibaseUsername.value, liquibasePassword.value, liquibaseDriver.value,
-      null, liquibaseDefaultSchemaName.value.getOrElse(null), null, null
-    )
-  }
+  def liquibase = Def.task[Liquibase] {
+    val fc = fullClasspath.in(Runtime).value
 
-  lazy val liquibase = Def.task[JLiquibase] {
     val changelog = liquibaseChangelog.value.absolutePath
-    new JLiquibase(changelog, new FileSystemResourceAccessor, database.value)
+    val url = liquibaseUrl.value
+    val username = liquibaseUsername.value
+    val password = liquibasePassword.value
+    val driver = liquibaseDriver.value
+    val defaultSchema = liquibaseDefaultSchemaName.value.getOrElse(null)
+    val liquibaseSchema = liquibaseSchemaName.value.getOrElse(defaultSchema)
+
+    val database = CommandLineUtils.createDatabaseObject(
+      ClasspathUtilities.toLoader(fc.map(_.data)),
+      url, username, password, driver,
+      defaultSchema, defaultSchema, false, false,
+      null, null, liquibaseSchema, liquibaseSchema
+    )
+
+    new Liquibase(changelog, new FileSystemResourceAccessor(), database)
   }
 
-  def IntArg(label: String) = (Space ~> token(IntBasic, label))
+  def IntArg(display: String): Parser[Int] = token((token(Space) ~> token(NatBasic, display)), display)
 
-  def StringArg(label: String) = (Space ~> token(StringBasic, label))
+  def StringArg(display: String): Parser[String] = token((token(Space) ~> token(StringBasic, display)), display)
 
-  def StringArgs(label:String) = spaceDelimited(label)
+  def StringArgs(display: String): Parser[Seq[String]] = spaceDelimited(display)
 
 }

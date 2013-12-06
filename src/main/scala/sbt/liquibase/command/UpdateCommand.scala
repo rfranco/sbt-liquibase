@@ -1,14 +1,12 @@
 package sbt.liquibase.command
 
 import sbt.Def.{macroValueI, macroValueIT, macroValueIInT}
-import sbt.Keys._
 import sbt._
-import sbt.liquibase.LiquibaseHelper
 
 object UpdateCommand {
 
-  import Liquibase._
-  import LiquibaseHelper._
+  import SbtLiquibase._
+  import liquibase.LiquibaseHelper._
 
   private val liquibaseUpdate = taskKey[Unit]("Updates database to current version")
   private val liquibaseUpdateCount = inputKey[Unit]("Applies the next <value> change sets")
@@ -23,15 +21,14 @@ object UpdateCommand {
   )
 
   private lazy val update = Def.task {
-    val out = streams.value
     val contexts = liquibaseContexts.value.mkString(",")
-    liquibase.value.update(contexts, out.text())
+    liquibase.value.update(contexts)
   }
 
   private lazy val updateCount = Def.inputTask {
     val count = IntArg("<count>").parsed
     val contexts = liquibaseContexts.value.mkString(",")
-    liquibase.value.update(count, contexts, streams.value.text())
+    liquibase.value.update(count, contexts)
   }
 
   private lazy val updateSql = Def.task {
