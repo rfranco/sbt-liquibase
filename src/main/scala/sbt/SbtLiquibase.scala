@@ -16,12 +16,18 @@ object SbtLiquibase extends Plugin {
   val liquibaseContexts = settingKey[Seq[String]]("ChangeSet contexts to execute")
   val liquibaseDefaultSchemaName = settingKey[Option[String]]("Specifies the default schema to use for managed database objects and for Liquibase control tables")
   val liquibaseSchemaName = settingKey[Option[String]]("Specifies the schema to use for Liquibase control tables")
+  val liquibaseChangeLogTablePrefix = settingKey[Option[String]]("Specifies a prefix for change log tables")
+  val liquibaseChangeLogTableName = settingKey[Option[String]]("Specifies the change log table name")
+  val liquibaseChangeLogLockTableName = settingKey[Option[String]]("Specifies the change log lock table name")
 
   val liquibaseSettings: Seq[Setting[_]] = Seq(
     liquibaseChangelog := resourceDirectory.in(Compile).value / "migrations" / "changelog.xml",
     liquibaseContexts := Nil,
     liquibaseDefaultSchemaName := None,
-    liquibaseSchemaName := None
+    liquibaseSchemaName := None,
+    liquibaseChangeLogTablePrefix := None,
+    liquibaseChangeLogTableName := None,
+    liquibaseChangeLogLockTableName := None
   ) ++
     DiffCommand.settings ++
     DocumentationCommand.settings ++

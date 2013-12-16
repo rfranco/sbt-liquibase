@@ -33,6 +33,13 @@ object LiquibaseHelper {
       null, null, liquibaseSchema, liquibaseSchema
     )
 
+    val changeLogTablePrefix = liquibaseChangeLogTablePrefix.value.map(_ + "_").getOrElse("")
+    val changeLogTableName = changeLogTablePrefix + liquibaseChangeLogTableName.value.getOrElse(database.getDatabaseChangeLogTableName)
+    val changeLogLockTableName = changeLogTablePrefix + liquibaseChangeLogLockTableName.value.getOrElse(database.getDatabaseChangeLogLockTableName)
+
+    database.setDatabaseChangeLogTableName(changeLogTableName)
+    database.setDatabaseChangeLogLockTableName(changeLogLockTableName)
+
     new Liquibase(changelog, new FileSystemResourceAccessor(), database)
   }
 
