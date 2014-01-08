@@ -1,15 +1,14 @@
 package sbt.liquibase
 
+import liquibase.Liquibase
 import liquibase.integration.commandline.CommandLineUtils
 import liquibase.resource.FileSystemResourceAccessor
-import liquibase.Liquibase
 import sbt.Def.{macroValueI, macroValueIT}
 import sbt.Keys._
 import sbt._
 import sbt.classpath.ClasspathUtilities
 import sbt.complete.DefaultParsers._
 import sbt.complete.Parser
-import sbt.complete.Parser.token
 
 object LiquibaseHelper {
 
