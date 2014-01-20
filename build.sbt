@@ -4,7 +4,7 @@ organization := "sbt"
 
 name := "sbt-liquibase"
 
-libraryDependencies += "org.liquibase" % "liquibase-core" % "3.0.+"
+libraryDependencies += "org.liquibase" % "liquibase-core" % "3.1.1"
 
 scriptedSettings
 
