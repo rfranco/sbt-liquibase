@@ -1,5 +1,6 @@
 package sbt.liquibase
 
+import liquibase.database.Database
 import liquibase.Liquibase
 import liquibase.integration.commandline.CommandLineUtils
 import liquibase.resource.FileSystemResourceAccessor
@@ -14,10 +15,10 @@ object LiquibaseHelper {
 
   import SbtLiquibase._
 
-  def liquibase = Def.task[Liquibase] {
+  private def database = Def.task[Database] {
     val fc = fullClasspath.in(Runtime).value
 
-    val changelog = liquibaseChangelog.value.absolutePath
+
     val url = liquibaseUrl.value
     val username = liquibaseUsername.value
     val password = liquibasePassword.value
@@ -39,13 +40,17 @@ object LiquibaseHelper {
     database.setDatabaseChangeLogTableName(changeLogTableName)
     database.setDatabaseChangeLogLockTableName(changeLogLockTableName)
 
-    new Liquibase(changelog, new FileSystemResourceAccessor(), database)
+    database
   }
 
-  def IntArg(display: String): Parser[Int] = token((token(Space) ~> token(NatBasic, display)), display)
+  def liquibase = Def.task[Liquibase] {
+    val changelog = liquibaseChangelog.value.absolutePath
+    val db = database.value
+    new Liquibase(changelog, new FileSystemResourceAccessor(), db)
+  }
 
-  def StringArg(display: String): Parser[String] = token((token(Space) ~> token(StringBasic, display)), display)
-
+  def IntArg(display: String): Parser[Int] = Space ~> token(NatBasic, display)
+  def StringArg(display: String): Parser[String] = Space ~> token(StringBasic, display)
   def StringArgs(display: String): Parser[Seq[String]] = spaceDelimited(display)
 
 }
