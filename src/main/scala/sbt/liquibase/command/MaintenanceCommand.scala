@@ -1,10 +1,7 @@
 package sbt.liquibase.command
 
 import _root_.liquibase.CatalogAndSchema
-import java.io.PrintStream
-import sbt.Def.{macroValueI, macroValueIT}
 import sbt._
-import sbt.Keys._
 
 object MaintenanceCommand {
 
@@ -36,9 +33,8 @@ object MaintenanceCommand {
   )
 
   private lazy val status = Def.task {
-    val out = streams.value
     val contexts = liquibaseContexts.value.mkString(",")
-    liquibase.value.reportStatus(true, contexts, out.text())
+    liquibase.value.reportStatus(true, contexts, outputWriter)
   }
 
   private lazy val tag = Def.inputTask {
@@ -51,24 +47,22 @@ object MaintenanceCommand {
   }
 
   private lazy val changelogSync = Def.task {
-    val out = streams.value
     val contexts = liquibaseContexts.value.mkString(",")
-    liquibase.value.changeLogSync(contexts, out.text())
+    liquibase.value.changeLogSync(contexts)
   }
 
   private lazy val changelogSyncSQL = Def.task {
-
+    val contexts = liquibaseContexts.value.mkString(",")
+    liquibase.value.changeLogSync(contexts, outputWriter)
   }
 
   private lazy val markNextChangeSetRan = Def.task {
-    val out = streams.value
     val contexts = liquibaseContexts.value.mkString(",")
-    liquibase.value.markNextChangeSetRan(contexts, out.text())
+    liquibase.value.markNextChangeSetRan(contexts, outputWriter)
   }
 
   private lazy val listLocks = Def.task {
-    val out = streams.value
-    liquibase.value.reportLocks(new PrintStream(out.binary(), true))
+    liquibase.value.reportLocks(System.out)
   }
 
   private lazy val releaseLocks = Def.task {

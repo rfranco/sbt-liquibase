@@ -1,12 +1,12 @@
 package sbt
 
-import sbt.Def._
 import sbt.Keys._
 import sbt.liquibase.command._
 
 object SbtLiquibase extends Plugin {
 
-  val liquibaseChangelog = settingKey[File]("The changelog file to use")
+  val liquibaseChangelog = settingKey[String]("The changelog file to use")
+  val liquibaseChangelogDirectory = settingKey[File]("The changelog directory")
   val liquibaseUsername = settingKey[String]("Database username")
   val liquibasePassword = settingKey[String]("Database password")
   val liquibaseUrl = settingKey[String]("Database URL")
@@ -21,7 +21,8 @@ object SbtLiquibase extends Plugin {
   val liquibaseChangeLogLockTableName = settingKey[Option[String]]("Specifies the change log lock table name")
 
   val liquibaseSettings: Seq[Setting[_]] = Seq(
-    liquibaseChangelog := resourceDirectory.in(Compile).value / "migrations" / "changelog.xml",
+    liquibaseChangelog := "changelog.xml",
+    liquibaseChangelogDirectory := resourceDirectory.in(Compile).value / "migrations",
     liquibaseContexts := Nil,
     liquibaseDefaultSchemaName := None,
     liquibaseSchemaName := None,
@@ -31,6 +32,7 @@ object SbtLiquibase extends Plugin {
   ) ++
     DiffCommand.settings ++
     DocumentationCommand.settings ++
+    GenerateCommand.settings ++
     MaintenanceCommand.settings ++
     RollbackCommand.settings ++
     UpdateCommand.settings

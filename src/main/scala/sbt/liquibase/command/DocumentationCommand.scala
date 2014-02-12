@@ -1,8 +1,7 @@
 package sbt.liquibase.command
 
-import sbt.Def.{macroValueIT, macroValueI}
-import sbt.Keys._
 import sbt._
+import sbt.Keys._
 
 object DocumentationCommand {
 
@@ -15,7 +14,7 @@ object DocumentationCommand {
   )
 
   private lazy val dbDoc = Def.task {
-    val output = target.value / "liquibase" / "docs"
+    val output = target.value / "migrations" / "docs"
     liquibase.value.generateDocumentation(output.absolutePath)
   }
 

@@ -4,6 +4,9 @@ import sbt._
 
 object DiffCommand {
 
+  import SbtLiquibase._
+  import liquibase.LiquibaseHelper._
+
   private val liquibaseDiff = taskKey[Unit]("Writes description of differences to standard out")
   private val liquibaseChangeLog = taskKey[Unit]("Writes Change Log XML to update the base database to the target database to standard out")
 
@@ -17,6 +20,5 @@ object DiffCommand {
   }
 
   private lazy val changelog = Def.task {
-
   }
 }
