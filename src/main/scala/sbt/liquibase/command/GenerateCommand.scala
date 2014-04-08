@@ -6,7 +6,7 @@ import sbt._
 
 object GenerateCommand {
 
-  import SbtLiquibase._
+  import SbtLiquibase.autoImport._
   import liquibase.LiquibaseHelper._
 
   private val liquibaseGenerateChangeLog = taskKey[Unit]("Generate ChangeLog of the database to standard out")
@@ -16,8 +16,8 @@ object GenerateCommand {
   )
 
   private lazy val generateChangeLog = Def.task {
-    val defaultSchema = liquibaseDefaultSchemaName.value.getOrElse(null)
-    val changelogFile = liquibaseChangelogDirectory.value / liquibaseChangelog.value
+    val defaultSchema = LiquibaseKeys.defaultSchemaName.value.getOrElse(null)
+    val changelogFile = LiquibaseKeys.changelogDirectory.value / LiquibaseKeys.changelog.value
     CommandLineUtils.doGenerateChangeLog(
       changelogFile.getAbsolutePath,
       database.value,

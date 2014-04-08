@@ -12,48 +12,46 @@ import sbt.complete.Parser
 
 object LiquibaseHelper {
 
-  import SbtLiquibase._
+  import SbtLiquibase.autoImport.LiquibaseKeys._
 
-  private[liquibase] def database = Def.task[Database] {
+  private[liquibase] val database = Def.task[Database] {
     val fc = fullClasspath.in(Runtime).value
-    val url = liquibaseUrl.value
-    val username = liquibaseUsername.value
-    val password = liquibasePassword.value
-    val driver = liquibaseDriver.value
-    val defaultSchema = liquibaseDefaultSchemaName.value.getOrElse(null)
-    val liquibaseSchema = liquibaseSchemaName.value.getOrElse(defaultSchema)
+
+    val defaultSchema = defaultSchemaName.value.getOrElse(null)
+    val liquibaseSchema = schemaName.value.getOrElse(defaultSchema)
 
     val database = CommandLineUtils.createDatabaseObject(
       ClasspathUtilities.toLoader(fc.map(_.data)),
-      url, username, password, driver,
+      url.value, username.value, password.value, driver.value,
       defaultSchema, defaultSchema, false, false,
       null, null, liquibaseSchema, liquibaseSchema
     )
 
-    val changeLogTablePrefix = liquibaseChangeLogTablePrefix.value.map(_ + "_").getOrElse("")
-    val changeLogTableName = changeLogTablePrefix + liquibaseChangeLogTableName.value.getOrElse(database.getDatabaseChangeLogTableName)
-    val changeLogLockTableName = changeLogTablePrefix + liquibaseChangeLogLockTableName.value.getOrElse(database.getDatabaseChangeLogLockTableName)
+    val tablePrefix = changeLogTablePrefix.value.map(_ + "_").getOrElse("")
+    val tableName = tablePrefix + changeLogTableName.value.getOrElse(database.getDatabaseChangeLogTableName)
+    val lockTableName = tablePrefix + changeLogLockTableName.value.getOrElse(database.getDatabaseChangeLogLockTableName)
 
-    database.setDatabaseChangeLogTableName(changeLogTableName)
-    database.setDatabaseChangeLogLockTableName(changeLogLockTableName)
+    database.setDatabaseChangeLogTableName(tableName)
+    database.setDatabaseChangeLogLockTableName(lockTableName)
 
     database
   }
 
-  private[liquibase] def liquibase = Def.task[Liquibase] {
-    val changelog = liquibaseChangelog.value
-    val changelogPath = liquibaseChangelogDirectory.value.getPath
-    val db = database.value
-    new Liquibase(changelog, new FileSystemResourceAccessor(changelogPath), db)
+  private[liquibase] val liquibase = Def.task[Liquibase] {
+    new Liquibase(
+      changelog.value,
+      new FileSystemResourceAccessor(changelogDirectory.value.getPath),
+      database.value
+    )
   }
 
   private[liquibase] lazy val outputWriter = {
     new java.io.OutputStreamWriter(System.out)
   }
 
-  def IntArg(display: String): Parser[Int] = SpaceClass ~> token(NatBasic, display)
+  def IntArg(display: String): Parser[Int] = token(Space ~> NatBasic, display)
 
-  def StringArg(display: String): Parser[String] = SpaceClass ~> token(StringBasic, display)
+  def StringArg(display: String): Parser[String] = token(Space ~> StringBasic, display)
 
   def StringArgs(display: String): Parser[Seq[String]] = spaceDelimited(display)
 

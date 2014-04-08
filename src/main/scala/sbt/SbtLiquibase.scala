@@ -3,38 +3,48 @@ package sbt
 import sbt.Keys._
 import sbt.liquibase.command._
 
-object SbtLiquibase extends Plugin {
+object SbtLiquibase extends AutoPlugin {
 
-  val liquibaseChangelog = settingKey[String]("The changelog file to use")
-  val liquibaseChangelogDirectory = settingKey[File]("The changelog directory")
-  val liquibaseUsername = settingKey[String]("Database username")
-  val liquibasePassword = settingKey[String]("Database password")
-  val liquibaseUrl = settingKey[String]("Database URL")
-  val liquibaseDriver = settingKey[String]("Database driver class name")
+  val autoImport = LiquibaseImport
+  import autoImport._
 
-  //Optional Parameters
-  val liquibaseContexts = settingKey[Seq[String]]("ChangeSet contexts to execute")
-  val liquibaseDefaultSchemaName = settingKey[Option[String]]("Specifies the default schema to use for managed database objects and for Liquibase control tables")
-  val liquibaseSchemaName = settingKey[Option[String]]("Specifies the schema to use for Liquibase control tables")
-  val liquibaseChangeLogTablePrefix = settingKey[Option[String]]("Specifies a prefix for change log tables")
-  val liquibaseChangeLogTableName = settingKey[Option[String]]("Specifies the change log table name")
-  val liquibaseChangeLogLockTableName = settingKey[Option[String]]("Specifies the change log lock table name")
-
-  val liquibaseSettings: Seq[Setting[_]] = Seq(
-    liquibaseChangelog := "changelog.xml",
-    liquibaseChangelogDirectory := resourceDirectory.in(Compile).value / "migrations",
-    liquibaseContexts := Nil,
-    liquibaseDefaultSchemaName := None,
-    liquibaseSchemaName := None,
-    liquibaseChangeLogTablePrefix := None,
-    liquibaseChangeLogTableName := None,
-    liquibaseChangeLogLockTableName := None
+  override lazy val projectSettings = Seq(
+    LiquibaseKeys.changelog := "changelog.xml",
+    LiquibaseKeys.changelogDirectory := resourceDirectory.in(Compile).value / "db",
+    LiquibaseKeys.contexts := Nil,
+    LiquibaseKeys.defaultSchemaName := None,
+    LiquibaseKeys.schemaName := None,
+    LiquibaseKeys.changeLogTablePrefix := None,
+    LiquibaseKeys.changeLogTableName := None,
+    LiquibaseKeys.changeLogLockTableName := None
   ) ++
     DiffCommand.settings ++
     DocumentationCommand.settings ++
     GenerateCommand.settings ++
     MaintenanceCommand.settings ++
+    PackageCommand.settings ++
     RollbackCommand.settings ++
     UpdateCommand.settings
+
+}
+
+object LiquibaseImport {
+
+  object LiquibaseKeys {
+    val changelog = settingKey[String]("The changelog file to use")
+    val changelogDirectory = settingKey[File]("The changelog directory")
+    val username = settingKey[String]("Database username")
+    val password = settingKey[String]("Database password")
+    val url = settingKey[String]("Database URL")
+    val driver = settingKey[String]("Database driver class name")
+
+    //Optional Parameters
+    val contexts = settingKey[Seq[String]]("ChangeSet contexts to execute")
+    val defaultSchemaName = settingKey[Option[String]]("Specifies the default schema to use for managed database objects and for Liquibase control tables")
+    val schemaName = settingKey[Option[String]]("Specifies the schema to use for Liquibase control tables")
+    val changeLogTablePrefix = settingKey[Option[String]]("Specifies a prefix for change log tables")
+    val changeLogTableName = settingKey[Option[String]]("Specifies the change log table name")
+    val changeLogLockTableName = settingKey[Option[String]]("Specifies the change log lock table name")
+  }
 
 }

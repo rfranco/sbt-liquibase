@@ -1,1 +1,1 @@
-addSbtPlugin("sbt" %% "sbt-liquibase" % "0.7.0-SNAPSHOT")
+addSbtPlugin("sbt" %% "sbt-liquibase" % "0.8.0-SNAPSHOT")
