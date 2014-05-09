@@ -4,8 +4,8 @@ import sbt._
 
 object UpdateCommand {
 
-  import SbtLiquibase.autoImport._
-  import liquibase.LiquibaseHelper._
+  import sbt.Liquibase.Keys
+  import sbt.liquibase.Helper._
 
   private val liquibaseUpdate = taskKey[Unit]("Updates database to current version")
   private val liquibaseUpdateCount = inputKey[Unit]("Applies the next <value> change sets")
@@ -22,29 +22,29 @@ object UpdateCommand {
   )
 
   private lazy val update = Def.task {
-    val contexts = LiquibaseKeys.contexts.value.mkString(",")
+    val contexts = Keys.contexts.value.mkString(",")
     liquibase.value.update(contexts)
   }
 
   private lazy val updateCount = Def.inputTask {
     val count = IntArg("<count>").parsed
-    val contexts = LiquibaseKeys.contexts.value.mkString(",")
+    val contexts = Keys.contexts.value.mkString(",")
     liquibase.value.update(count, contexts)
   }
 
   private lazy val updateSql = Def.task {
-    val contexts = LiquibaseKeys.contexts.value.mkString(",")
+    val contexts = Keys.contexts.value.mkString(",")
     liquibase.value.update(contexts, outputWriter)
   }
 
   private lazy val updateCountSql = Def.inputTask {
     val count = IntArg("<count>").parsed
-    val contexts = LiquibaseKeys.contexts.value.mkString(",")
+    val contexts = Keys.contexts.value.mkString(",")
     liquibase.value.update(count, contexts, outputWriter)
   }
 
   private lazy val updateTestingRollback = Def.task {
-    val contexts = LiquibaseKeys.contexts.value.mkString(",")
+    val contexts = Keys.contexts.value.mkString(",")
     liquibase.value.updateTestingRollback(contexts)
   }
 }

@@ -1,11 +1,11 @@
-lazy val root = (project in file(".")).enablePlugins(SbtLiquibase)
+lazy val root = (project in file(".")).enablePlugins(Liquibase)
 
 libraryDependencies += "com.h2database" % "h2" % "1.3.170"
 
-LiquibaseKeys.driver := "org.h2.Driver"
+Liquibase.Keys.driver := "org.h2.Driver"
 
-LiquibaseKeys.url := "jdbc:h2:target/db/test;AUTO_SERVER=TRUE"
+Liquibase.Keys.url := "jdbc:h2:target/db/test;AUTO_SERVER=TRUE"
 
-LiquibaseKeys.username := ""
+Liquibase.Keys.username := ""
 
-LiquibaseKeys.password := ""
+Liquibase.Keys.password := ""

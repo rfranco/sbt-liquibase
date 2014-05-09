@@ -1,22 +1,20 @@
-Liquibase plugin for sbt 0.13+
+Liquibase plugin for sbt 0.13.5+
 ====================================
 [![Build Status](https://travis-ci.org/rfranco/sbt-liquibase.png)](https://travis-ci.org/rfranco/sbt-liquibase)
 
-# Instructions for use:
+# sbt-0.11+ and sbt-0.12+
+
+[Liquibase plugin for sbt 0.11+ and 0.12+](https://github.com/bigtoast/sbt-liquibase)
+
+# sbt-0.13.5
+
+## Instructions for use:
 ### Step 1: Include the plugin in your build
 
 Add the following to your `project/plugins.sbt`:
 
-## sbt-0.11+ and sbt-0.12+
-
-[Liquibase plugin for sbt 0.11+ and 0.12+](https://github.com/bigtoast/sbt-liquibase)
-
-## sbt-0.13.0
-
 ```scala
-resolvers += "" at ""
-
-addSbtPlugin("sbt" % "sbt-liquibase" % "0.1.0-SNAPSHOT")
+addSbtPlugin("sbt" % "sbt-liquibase" % "0.8.0-SNAPSHOT")
 ```
 
 ### Step 2: Add sbt-liquibase settings to your build
@@ -24,15 +22,15 @@ addSbtPlugin("sbt" % "sbt-liquibase" % "0.1.0-SNAPSHOT")
 Add the following to your 'build.sbt' ( if you are using build.sbt )
 
 ```scala
-liquibaseSettings
+lazy val root = (project in file(".")).enablePlugins(sbt.Liquibase)
 
-liquibaseUsername := "name"
+Liquibase.Keys.driver := "org.h2.Driver"
 
-liquibasePassword := "secret"
+Liquibase.Keys.url := "jdbc:h2:target/db/test;AUTO_SERVER=TRUE"
 
-liquibaseDriver   := "com.mysql.jdbc.Driver"
+Liquibase.Keys.username := ""
 
-liquibaseUrl      := "jdbc:mysql://localhost:3306/test_db?createDatabaseIfNotExist=true"
+Liquibase.Keys.password := ""
 ```
 
 Or if you are using a build object extending from Build:
@@ -40,15 +38,16 @@ Or if you are using a build object extending from Build:
 ```scala
 import sbt._
 import sbt.Keys._
-import sbt.Liquibase._
 
 class MyBuild extends Build {
-    val myProject = Project("myProject", file("."), settings = Defaults.defaultSettings ++ liquibaseSettings ++ Seq (
-        liquibaseUsername := "name",
-        liquibasePassword := "secret",
-        liquibaseDriver   := "com.mysql.jdbc.Driver",
-        liquibaseUrl      := "jdbc:mysql://localhost:3306/test_db?createDatabaseIfNotExist=true"
-    )
+    val myProject = Project("myProject", file("."))
+        .enablePlugins(Liquibase)
+        .settings(
+            Liquibase.Keys.driver := "org.h2.Driver"
+            Liquibase.Keys.url := "jdbc:h2:target/db/test;AUTO_SERVER=TRUE"
+            Liquibase.Keys.username := ""
+            Liquibase.Keys.password := ""
+        )
 }
 ```
 
@@ -56,52 +55,52 @@ class MyBuild extends Build {
 
 <table>
     <tr>
-        <td> <b>liquibaseUsername</b> </td>
-        <td>Username for the database. This defaults to blank.</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>liquibaseUsername := "asdf"</td>
-    </tr>
-    <tr>
-        <td> <b>liquibasePassword</b> </td>
-        <td>Password for the database. This defaults to blank.</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>liquibasePassword := "secretstuff"</td>
-    </tr>
-    <tr>
-        <td> <b>liqubaseDriver</b> </td>
+        <td> <b>Liquibase.Keys.driver</b> </td>
         <td>Database driver classname. There is no default.</td>
     </tr>
     <tr>
         <td></td>
-        <td>liquibaseDriver := "com.mysql.jdbc.Driver"</td>
+        <td>Liquibase.Keys.driver := "com.mysql.jdbc.Driver"</td>
     </tr>
     <tr>
-        <td> <b>liquibaseUrl</b> </td>
+        <td> <b>Liquibase.Keys.url</b> </td>
         <td>Database connection uri. There is no default.</td>
     </tr>
     <tr>
         <td></td>
-        <td>liquibaseUrl := "jdbc:mysql://localhost:3306/mydb"</td>
+        <td>Liquibase.Keys.url := "jdbc:mysql://localhost:3306/mydb"</td>
     </tr>
     <tr>
-        <td> <b>liquibaseDefaultSchemaName</b> </td>
-        <td>Default schema name for the db if it isn't defined in the uri. This defaults to null.</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>liquibaseDefaultSchemaName := "dbname"</td>
-    </tr>
-    <tr>
-        <td> <b>liquibaseChangelog</b> </td>
-        <td>Full path to your changelog file. This defaults 'src/main/resources/migrations/changelog.xml'.</td>
+        <td> <b>Liquibase.Keys.username</b> </td>
+        <td>Username for the database. This defaults to blank.</td>
     </tr>
     <tr>
         <td></td>
-        <td>liquibaseChangelog := "other/path/dbchanges.xml"</td>
+        <td>Liquibase.Keys.username := "user"</td>
+    </tr>
+    <tr>
+        <td> <b>Liquibase.Keys.password</b> </td>
+        <td>Password for the database. This defaults to blank.</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Liquibase.Keys.password := "123"</td>
+    </tr>
+    <tr>
+        <td> <b>Liquibase.Keys.changelog</b> </td>
+        <td>The changelog file to use. This defaults is changelog.xml".</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Liquibase.Keys.changelog := "changelog.xml"</td>
+    </tr>
+    <tr>
+        <td> <b>Liquibase.Keys.changelogDirectory</b> </td>
+        <td>The changelog directory. This defaults is "src/main/resources/db".</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Liquibase.Keys.changelogDirectory := resourceDirectory.in(Compile).value / "db"</td>
     </tr>
 </table>
 

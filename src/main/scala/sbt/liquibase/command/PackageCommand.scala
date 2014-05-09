@@ -6,7 +6,8 @@ import java.io.File
 
 object PackageCommand {
 
-  import SbtLiquibase.autoImport.LiquibaseKeys._
+  import sbt.Liquibase.Keys
+  import sbt.liquibase.Helper._
 
   private val liquibasePackage = taskKey[File]("Package migrations file")
 
@@ -17,8 +18,9 @@ object PackageCommand {
   private lazy val packageSQL = Def.task {
     val packageName = s"${normalizedName.value}-${version.value}-sql"
     val zip = target.value / (packageName + ".zip")
+    val changelogDirectory = Keys.changelogDirectory.value
     streams.value.log.info("Packaging " + zip.getAbsolutePath)
-    IO.zip(Path.allSubpaths(changelogDirectory.value), zip)
+    IO.zip(Path.allSubpaths(changelogDirectory), zip)
     streams.value.log.info("Done packaging.")
     zip
   }

@@ -3,34 +3,9 @@ package sbt
 import sbt.Keys._
 import sbt.liquibase.command._
 
-object SbtLiquibase extends AutoPlugin {
+object Liquibase extends AutoPlugin {
 
-  val autoImport = LiquibaseImport
-  import autoImport._
-
-  override lazy val projectSettings = Seq(
-    LiquibaseKeys.changelog := "changelog.xml",
-    LiquibaseKeys.changelogDirectory := resourceDirectory.in(Compile).value / "db",
-    LiquibaseKeys.contexts := Nil,
-    LiquibaseKeys.defaultSchemaName := None,
-    LiquibaseKeys.schemaName := None,
-    LiquibaseKeys.changeLogTablePrefix := None,
-    LiquibaseKeys.changeLogTableName := None,
-    LiquibaseKeys.changeLogLockTableName := None
-  ) ++
-    DiffCommand.settings ++
-    DocumentationCommand.settings ++
-    GenerateCommand.settings ++
-    MaintenanceCommand.settings ++
-    PackageCommand.settings ++
-    RollbackCommand.settings ++
-    UpdateCommand.settings
-
-}
-
-object LiquibaseImport {
-
-  object LiquibaseKeys {
+  object Keys {
     val changelog = settingKey[String]("The changelog file to use")
     val changelogDirectory = settingKey[File]("The changelog directory")
     val username = settingKey[String]("Database username")
@@ -46,5 +21,27 @@ object LiquibaseImport {
     val changeLogTableName = settingKey[Option[String]]("Specifies the change log table name")
     val changeLogLockTableName = settingKey[Option[String]]("Specifies the change log lock table name")
   }
+
+  object autoImport {
+    val LiquibaseKeys = Keys
+  }
+
+  override lazy val projectSettings = Seq(
+    Keys.changelog := "changelog.xml",
+    Keys.changelogDirectory := resourceDirectory.in(Compile).value / "db",
+    Keys.contexts := Nil,
+    Keys.defaultSchemaName := None,
+    Keys.schemaName := None,
+    Keys.changeLogTablePrefix := None,
+    Keys.changeLogTableName := None,
+    Keys.changeLogLockTableName := None
+  ) ++
+    DiffCommand.settings ++
+    DocumentationCommand.settings ++
+    GenerateCommand.settings ++
+    MaintenanceCommand.settings ++
+    PackageCommand.settings ++
+    RollbackCommand.settings ++
+    UpdateCommand.settings
 
 }
