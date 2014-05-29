@@ -1,6 +1,6 @@
-libraryDependencies += "com.h2database" % "h2" % "1.3.170"
+lazy val root = (project in file(".")).enablePlugins(Liquibase)
 
-LiquibaseSettings
+libraryDependencies += "com.h2database" % "h2" % "1.3.170"
 
 LiquibaseKeys.driver := "org.h2.Driver"
 

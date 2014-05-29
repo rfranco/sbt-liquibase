@@ -3,9 +3,9 @@ package sbt
 import sbt.Keys._
 import sbt.liquibase.command._
 
-object Liquibase extends AutoPlugin {
+object Liquibase extends AutoPlugin {self =>
 
-  object Keys {
+  object LiquibaseKeys {
     val changelog = settingKey[String]("The changelog file to use")
     val changelogDirectory = settingKey[File]("The changelog directory")
     val username = settingKey[String]("Database username")
@@ -22,19 +22,15 @@ object Liquibase extends AutoPlugin {
     val changeLogLockTableName = settingKey[Option[String]]("Specifies the change log lock table name")
   }
 
-  object autoImport {
-    val LiquibaseKeys = Keys
-  }
-
-  override lazy val projectSettings = Seq(
-    Keys.changelog := "changelog.xml",
-    Keys.changelogDirectory := resourceDirectory.in(Compile).value / "db",
-    Keys.contexts := Nil,
-    Keys.defaultSchemaName := None,
-    Keys.schemaName := None,
-    Keys.changeLogTablePrefix := None,
-    Keys.changeLogTableName := None,
-    Keys.changeLogLockTableName := None
+  val LiquibaseSettings = Seq(
+    LiquibaseKeys.changelog := "changelog.xml",
+    LiquibaseKeys.changelogDirectory := resourceDirectory.in(Compile).value / "db",
+    LiquibaseKeys.contexts := Nil,
+    LiquibaseKeys.defaultSchemaName := None,
+    LiquibaseKeys.schemaName := None,
+    LiquibaseKeys.changeLogTablePrefix := None,
+    LiquibaseKeys.changeLogTableName := None,
+    LiquibaseKeys.changeLogLockTableName := None
   ) ++
     DiffCommand.settings ++
     DocumentationCommand.settings ++
@@ -43,5 +39,13 @@ object Liquibase extends AutoPlugin {
     PackageCommand.settings ++
     RollbackCommand.settings ++
     UpdateCommand.settings
+
+
+  override val projectSettings = LiquibaseSettings
+
+  object autoImport {
+    val LiquibaseKeys = self.LiquibaseKeys
+    val LiquibaseSettings = self.LiquibaseSettings
+  }
 
 }

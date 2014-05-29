@@ -4,7 +4,7 @@ import sbt._
 
 object DiffCommand {
 
-  import sbt.Liquibase.Keys
+  import sbt.Liquibase.LiquibaseKeys
   import sbt.liquibase.Helper._
 
   private val liquibaseDiff = taskKey[Unit]("Writes description of differences to standard out")

@@ -5,7 +5,7 @@ import sbt._
 
 object MaintenanceCommand {
 
-  import sbt.Liquibase.Keys
+  import sbt.Liquibase.LiquibaseKeys
   import sbt.liquibase.Helper._
 
   private val liquibaseStatus = taskKey[Unit]("Outputs count (list if --verbose) of unrun change sets")
@@ -33,7 +33,7 @@ object MaintenanceCommand {
   )
 
   private lazy val status = Def.task {
-    val contexts = Keys.contexts.value.mkString(",")
+    val contexts = LiquibaseKeys.contexts.value.mkString(",")
     liquibase.value.reportStatus(true, contexts, outputWriter)
   }
 
@@ -47,17 +47,17 @@ object MaintenanceCommand {
   }
 
   private lazy val changelogSync = Def.task {
-    val contexts = Keys.contexts.value.mkString(",")
+    val contexts = LiquibaseKeys.contexts.value.mkString(",")
     liquibase.value.changeLogSync(contexts)
   }
 
   private lazy val changelogSyncSQL = Def.task {
-    val contexts = Keys.contexts.value.mkString(",")
+    val contexts = LiquibaseKeys.contexts.value.mkString(",")
     liquibase.value.changeLogSync(contexts, outputWriter)
   }
 
   private lazy val markNextChangeSetRan = Def.task {
-    val contexts = Keys.contexts.value.mkString(",")
+    val contexts = LiquibaseKeys.contexts.value.mkString(",")
     liquibase.value.markNextChangeSetRan(contexts, outputWriter)
   }
 

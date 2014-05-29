@@ -20,6 +20,6 @@
             <column name="active" type="boolean" defaultValueBoolean="true"/>
         </createTable>
     </changeSet>
-    
+
 
 </databaseChangeLog>
