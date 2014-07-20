@@ -11,5 +11,3 @@ scalacOptions += "-deprecation"
 scriptedSettings
 
 scriptedLaunchOpts <+= version(v => "-Dproject.version=" + v)
-
-releaseSettings
