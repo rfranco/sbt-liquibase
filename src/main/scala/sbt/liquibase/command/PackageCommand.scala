@@ -1,4 +1,5 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import sbt._
 import sbt.Keys._
@@ -6,8 +7,8 @@ import java.io.File
 
 object PackageCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Import._
+  import Helper._
 
   private val liquibasePackage = taskKey[File]("Package migrations file")
 

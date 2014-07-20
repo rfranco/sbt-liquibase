@@ -1,12 +1,13 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import sbt._
 import sbt.Keys._
 
 object DocumentationCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Import._
+  import Helper._
 
   private val liquibaseDbDoc = taskKey[Unit]("Generates Javadoc-like documentation based on current database and change log")
 

@@ -1,12 +1,13 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import _root_.liquibase.CatalogAndSchema
 import sbt._
 
 object MaintenanceCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Import._
+  import Helper._
 
   private val liquibaseStatus = taskKey[Unit]("Outputs count (list if --verbose) of unrun change sets")
   private val liquibaseTag = inputKey[Unit]("<tag>	'Tags' the current database state for future rollback")

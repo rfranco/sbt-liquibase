@@ -1,12 +1,13 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import _root_.liquibase.util.ISODateFormat
 import sbt._
 
 object RollbackCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Import._
+  import Helper._
 
   private val liquibaseRollback = inputKey[Unit]("Rolls back the database to the state it was in when the <tag> was applied")
   private val liquibaseRollbackToDate = inputKey[Unit]("Rolls back the database to the state it was in at the given date/time")

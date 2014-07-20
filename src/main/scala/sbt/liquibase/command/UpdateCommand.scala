@@ -1,11 +1,12 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import sbt._
 
 object UpdateCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Import._
+  import Helper._
 
   private val liquibaseUpdate = taskKey[Unit]("Updates database to current version")
   private val liquibaseUpdateCount = inputKey[Unit]("Applies the next <value> change sets")

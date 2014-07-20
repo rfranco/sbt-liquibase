@@ -1,11 +1,12 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import sbt._
 
 object DiffCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Import._
+  import Helper._
 
   private val liquibaseDiff = taskKey[Unit]("Writes description of differences to standard out")
   private val liquibaseChangeLog = taskKey[Unit]("Writes Change Log XML to update the base database to the target database to standard out")

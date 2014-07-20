@@ -1,4 +1,5 @@
-package sbt.liquibase.command
+package sbt.liquibase
+package command
 
 import _root_.liquibase.diff.output.DiffOutputControl
 import _root_.liquibase.integration.commandline.CommandLineUtils
@@ -6,8 +7,8 @@ import sbt._
 
 object GenerateCommand {
 
-  import sbt.Liquibase.LiquibaseKeys
-  import sbt.liquibase.Helper._
+  import Helper._
+  import Import._
 
   private val liquibaseGenerateChangeLog = taskKey[Unit]("Generate ChangeLog of the database to standard out")
 
