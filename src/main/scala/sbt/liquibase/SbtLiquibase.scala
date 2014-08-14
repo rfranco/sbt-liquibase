@@ -31,7 +31,7 @@ object SbtLiquibase extends AutoPlugin {
 
   val autoImport = Import
 
-  import autoImport._
+  import Import._
 
   override val projectSettings = Seq(
     LiquibaseKeys.changelog := "changelog.xml",
