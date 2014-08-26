@@ -17,7 +17,7 @@ object GenerateCommand {
   )
 
   private lazy val generateChangeLog = Def.task {
-    val defaultSchema = LiquibaseKeys.defaultSchemaName.value.getOrElse(null)
+    val defaultSchema = LiquibaseKeys.defaultSchemaName.value.orNull
     val changelogFile = LiquibaseKeys.changelogDirectory.value / LiquibaseKeys.changelog.value
     CommandLineUtils.doGenerateChangeLog(
       changelogFile.getAbsolutePath,
